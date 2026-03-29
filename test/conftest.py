@@ -1,4 +1,5 @@
 import os
+import shutil
 import sys
 from pathlib import Path
 
@@ -16,12 +17,14 @@ os.environ["RMS_DATABASE_URL"] = "sqlite:///./test.db"
 os.environ["RMS_SECRET_KEY"] = "test-secret-key"
 os.environ["RMS_ENVIRONMENT"] = "test"
 os.environ["RMS_CORS_ORIGINS"] = "http://localhost:5173"
+os.environ["RMS_UPLOADS_DIR"] = "./test_uploads"
 
 from app.db.base import Base  # noqa: E402
 from app.db.session import engine  # noqa: E402
 from app.main import app  # noqa: E402
 
 TEST_DB_PATH = ROOT_DIR / "test.db"
+TEST_UPLOADS_PATH = ROOT_DIR / "test_uploads"
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -37,6 +40,9 @@ def cleanup_test_db_file():
         except PermissionError:
             # On Windows, file handles can linger briefly after tests complete.
             pass
+
+    if TEST_UPLOADS_PATH.exists():
+        shutil.rmtree(TEST_UPLOADS_PATH, ignore_errors=True)
 
 
 @pytest.fixture(autouse=True)

@@ -43,7 +43,7 @@ export const AppLayout = () => {
     <div className="app-shell">
       <aside className="sidebar">
         <h1>ReimburseFlow</h1>
-        <p className="muted">Phase 3 in progress</p>
+        <p className="muted">Phase 8 in progress</p>
         <nav>
           {navItems.map((item) => (
             <NavLink

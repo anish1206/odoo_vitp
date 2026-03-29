@@ -9,6 +9,10 @@ import { EmployeeClaimsPage } from "./pages/EmployeeClaimsPage";
 import { EmployeeSubmitClaimPage } from "./pages/EmployeeSubmitClaimPage";
 import { LoginPage } from "./pages/LoginPage";
 import { ApprovalsInboxPage } from "./pages/ApprovalsInboxPage";
+import { AdminUsersPage } from "./pages/AdminUsersPage";
+import { AdminDepartmentsPage } from "./pages/AdminDepartmentsPage";
+import { AdminCategoriesPage } from "./pages/AdminCategoriesPage";
+import { AdminApprovalRulesPage } from "./pages/AdminApprovalRulesPage";
 import { PlaceholderPage } from "./pages/PlaceholderPage";
 import { SignupPage } from "./pages/SignupPage";
 
@@ -51,42 +55,10 @@ function App() {
               />
             }
           />
-          <Route
-            path="/admin/users"
-            element={
-              <PlaceholderPage
-                title="User Management"
-                description="Phase 5 will include user creation, updates, and deactivation."
-              />
-            }
-          />
-          <Route
-            path="/admin/departments"
-            element={
-              <PlaceholderPage
-                title="Department Management"
-                description="Phase 5 will include department CRUD and assignments."
-              />
-            }
-          />
-          <Route
-            path="/admin/categories"
-            element={
-              <PlaceholderPage
-                title="Category Management"
-                description="Phase 5 will include default category seed and CRUD workflows."
-              />
-            }
-          />
-          <Route
-            path="/admin/rules"
-            element={
-              <PlaceholderPage
-                title="Approval Rules"
-                description="Phase 6 will implement sequential and min-approval rule configuration."
-              />
-            }
-          />
+          <Route path="/admin/users" element={<AdminUsersPage />} />
+          <Route path="/admin/departments" element={<AdminDepartmentsPage />} />
+          <Route path="/admin/categories" element={<AdminCategoriesPage />} />
+          <Route path="/admin/rules" element={<AdminApprovalRulesPage />} />
         </Route>
       </Route>
 

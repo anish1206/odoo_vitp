@@ -20,6 +20,7 @@ class ClaimCreateRequest(BaseModel):
     title: str = Field(min_length=1, max_length=255)
     description: str | None = Field(default=None, max_length=2000)
     category_id: int
+    receipt_file_id: int | None = None
     original_currency: str = Field(min_length=3, max_length=3)
     original_amount: float = Field(gt=0)
     expense_date: date
@@ -30,6 +31,7 @@ class ClaimUpdateRequest(BaseModel):
     title: str | None = Field(default=None, min_length=1, max_length=255)
     description: str | None = Field(default=None, max_length=2000)
     category_id: int | None = None
+    receipt_file_id: int | None = None
     original_currency: str | None = Field(default=None, min_length=3, max_length=3)
     original_amount: float | None = Field(default=None, gt=0)
     expense_date: date | None = None
@@ -42,10 +44,15 @@ class ClaimOut(BaseModel):
     description: str | None
     category_id: int
     category_name: str
+    receipt_file_id: int | None
     original_currency: str
     original_amount: float
     base_currency: str
     converted_amount: float | None
+    exchange_rate_snapshot_id: int | None
+    exchange_rate: float | None
+    exchange_rate_provider: str | None
+    exchange_rate_as_of: datetime | None
     expense_date: date
     status: str
     submitted_at: datetime | None

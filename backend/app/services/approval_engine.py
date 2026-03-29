@@ -75,12 +75,47 @@ def _resolve_fallback_approver(db: Session, claim: ExpenseClaim) -> User | None:
     return None
 
 
-def _resolve_step_approver_id(step_approver_role: ApproverRole, step_approver_user_id: int | None, claim: ExpenseClaim) -> int | None:
+def _resolve_step_approver_id(
+    db: Session,
+    step_approver_role: ApproverRole,
+    step_approver_user_id: int | None,
+    step_approver_department_id: int | None,
+    claim: ExpenseClaim,
+) -> int | None:
     if step_approver_user_id is not None:
-        return step_approver_user_id
+        approver = db.get(User, step_approver_user_id)
+        if approver is None or not approver.is_active or approver.company_id != claim.company_id:
+            return None
+        return approver.id
 
     if step_approver_role == ApproverRole.MANAGER:
-        return claim.employee.manager_id
+        if claim.employee.manager_id is None:
+            return None
+
+        manager = db.get(User, claim.employee.manager_id)
+        if manager is None or not manager.is_active or manager.company_id != claim.company_id:
+            return None
+        return manager.id
+
+    if step_approver_role == ApproverRole.DEPARTMENT_HEAD:
+        if step_approver_department_id is None:
+            return None
+
+        candidates = db.scalars(
+            select(User).where(
+                User.company_id == claim.company_id,
+                User.department_id == step_approver_department_id,
+                User.is_active.is_(True),
+            )
+        ).all()
+
+        for candidate in candidates:
+            if candidate.role == UserRole.ADMIN:
+                return candidate.id
+
+        for candidate in candidates:
+            if candidate.is_approver:
+                return candidate.id
 
     return None
 
@@ -108,8 +143,10 @@ def generate_tasks_for_submitted_claim(
     if matched_rule is not None:
         for step in sorted(matched_rule.steps, key=lambda current_step: current_step.step_order):
             approver_id = _resolve_step_approver_id(
+                db=db,
                 step_approver_role=step.approver_role,
                 step_approver_user_id=step.approver_user_id,
+                step_approver_department_id=step.approver_department_id,
                 claim=claim,
             )
             if approver_id is None:

@@ -124,6 +124,12 @@ a {
   font-size: 14px;
 }
 
+.success-text {
+  color: #0a7a58;
+  margin: 0;
+  font-size: 14px;
+}
+
 .app-shell {
   min-height: 100vh;
   display: grid;
@@ -232,6 +238,109 @@ a {
   margin-top: 18px;
 }
 
+.admin-form-card {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: white;
+  padding: 14px;
+  margin-bottom: 16px;
+}
+
+.admin-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.admin-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.admin-grid-3 input,
+.admin-grid-3 select,
+.admin-grid-4 input,
+.admin-grid-4 select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  font-size: 14px;
+  background: white;
+}
+
+.inline-checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 8px 10px;
+  font-size: 14px;
+  background: white;
+}
+
+.users-table {
+  min-width: 1300px;
+}
+
+.users-table input,
+.users-table select {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font-size: 13px;
+  background: white;
+}
+
+.rules-layout {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 14px;
+}
+
+.rules-list,
+.rules-detail {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: white;
+  padding: 12px;
+}
+
+.rules-list {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+}
+
+.rule-steps-editor {
+  margin-top: 16px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px;
+  background: #fffefb;
+}
+
+.rule-step-row {
+  display: grid;
+  grid-template-columns: 90px 1.3fr 1fr 1fr 1fr auto;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.rule-step-row input,
+.rule-step-row select {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font-size: 13px;
+  background: white;
+}
+
 .page-header {
   display: flex;
   justify-content: space-between;
@@ -270,6 +379,18 @@ a {
 .text-area {
   min-height: 110px;
   resize: vertical;
+}
+
+.ocr-highlight-field {
+  border-color: #3f8f3f !important;
+  box-shadow: 0 0 0 2px rgba(63, 143, 63, 0.15);
+}
+
+.conversion-preview {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fffcf1;
+  padding: 10px 12px;
 }
 
 .full-width {
@@ -317,6 +438,21 @@ a {
   display: flex;
   gap: 8px;
   align-items: center;
+}
+
+@media (max-width: 960px) {
+  .admin-grid-3,
+  .admin-grid-4 {
+    grid-template-columns: 1fr;
+  }
+
+  .rules-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .rule-step-row {
+    grid-template-columns: 1fr;
+  }
 }
 
 .approval-layout {

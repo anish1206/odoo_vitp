@@ -4,8 +4,13 @@ from sqlalchemy import inspect, text
 
 import app.models  # noqa: F401
 from app.api.approvals import router as approvals_router
+from app.api.approval_rules import router as approval_rules_router
 from app.api.auth import router as auth_router
+from app.api.categories import router as categories_router
 from app.api.claims import router as claims_router
+from app.api.departments import router as departments_router
+from app.api.exchange_rates import router as exchange_rates_router
+from app.api.receipts import router as receipts_router
 from app.api.users import router as users_router
 from app.core.config import settings
 from app.db.base import Base
@@ -57,3 +62,8 @@ app.include_router(auth_router)
 app.include_router(users_router)
 app.include_router(claims_router)
 app.include_router(approvals_router)
+app.include_router(departments_router)
+app.include_router(categories_router)
+app.include_router(approval_rules_router)
+app.include_router(receipts_router)
+app.include_router(exchange_rates_router)

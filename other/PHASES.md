@@ -23,7 +23,7 @@ Acceptance:
 - Refresh endpoint issues a new access token.
 - Authenticated request to /users/me returns profile and company.
 
-## Phase 2 - Core Models and Migrations
+## Phase 2 - Core Models and Migrations (Implemented)
 
 Scope:
 - Add all primary entities from PRD section 4.
@@ -34,7 +34,7 @@ Acceptance:
 - Schema supports entities in section 4 with constraints/indexes.
 - New company gets default categories.
 
-## Phase 3 - Employee Claim Lifecycle (Draft and Submit)
+## Phase 3 - Employee Claim Lifecycle (Draft and Submit) (Implemented)
 
 Scope:
 - Claim create/update/list/detail endpoints for employee.
@@ -45,7 +45,7 @@ Acceptance:
 - Employee can create draft, edit draft, and submit claim.
 - Claims list supports status/date filtering.
 
-## Phase 4 - Approval Engine and Approver Inbox
+## Phase 4 - Approval Engine and Approver Inbox (Implemented)
 
 Scope:
 - Approval task generation from rules or manager fallback.
@@ -56,7 +56,7 @@ Acceptance:
 - Submitted claim creates approval tasks.
 - Approver can approve/reject and status progression is correct.
 
-## Phase 5 - Admin Master Data
+## Phase 5 - Admin Master Data (Implemented)
 
 Scope:
 - User management (create/edit/deactivate).
@@ -66,7 +66,7 @@ Scope:
 Acceptance:
 - Admin can CRUD users/departments/categories with RBAC enforcement.
 
-## Phase 6 - Approval Rule Management
+## Phase 6 - Approval Rule Management (Implemented)
 
 Scope:
 - Rule CRUD and rule step configuration.
@@ -77,7 +77,7 @@ Acceptance:
 - Admin can configure and activate rules.
 - Engine picks highest-priority matching active rule.
 
-## Phase 7 - Receipt Upload and OCR
+## Phase 7 - Receipt Upload and OCR (Implemented)
 
 Scope:
 - Receipt upload APIs and file storage abstraction.
@@ -87,7 +87,7 @@ Scope:
 Acceptance:
 - Uploading a receipt returns OCR output and prefills fields.
 
-## Phase 8 - Currency Conversion and Snapshots
+## Phase 8 - Currency Conversion and Snapshots (Implemented)
 
 Scope:
 - Exchange-rate service and snapshot model usage.
