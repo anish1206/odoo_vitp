@@ -1,0 +1,264 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap");
+
+:root {
+  --bg: #f4efe6;
+  --bg-accent: #fdf8f1;
+  --ink: #1f1d1a;
+  --muted: #675f54;
+  --line: #d6c6ab;
+  --primary: #0a8f6a;
+  --primary-ink: #ffffff;
+  --surface: #fffdf7;
+  --danger: #b42318;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  font-family: "IBM Plex Sans", sans-serif;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 10% 10%, #fff5db 0, transparent 40%),
+    radial-gradient(circle at 90% 90%, #e2f7ee 0, transparent 30%),
+    var(--bg);
+}
+
+h1,
+h2,
+h3 {
+  font-family: "Space Grotesk", sans-serif;
+  margin-top: 0;
+}
+
+a {
+  color: inherit;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.centered-page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  font-weight: 500;
+}
+
+.auth-page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.auth-card {
+  width: min(640px, 100%);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 28px;
+  display: grid;
+  gap: 10px;
+  box-shadow: 0 16px 40px rgba(88, 70, 32, 0.12);
+}
+
+.auth-card input,
+.auth-card select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  font-size: 14px;
+  background: white;
+}
+
+.auth-card button,
+.ghost-btn,
+.primary-link-btn,
+.secondary-link-btn {
+  border-radius: 12px;
+  border: 1px solid transparent;
+  padding: 10px 16px;
+  cursor: pointer;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.auth-card button,
+.primary-link-btn {
+  background: var(--primary);
+  color: var(--primary-ink);
+}
+
+.auth-card button:disabled {
+  opacity: 0.6;
+}
+
+.secondary-link-btn,
+.ghost-btn {
+  border: 1px solid var(--line);
+  background: transparent;
+}
+
+.split-inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.auth-footer {
+  margin-top: 2px;
+}
+
+.error-text {
+  color: var(--danger);
+  margin: 0;
+  font-size: 14px;
+}
+
+.app-shell {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 260px 1fr;
+}
+
+.sidebar {
+  background: #11120f;
+  color: #eef1ea;
+  padding: 24px 18px;
+  border-right: 1px solid #2d2c28;
+}
+
+.sidebar h1 {
+  margin-bottom: 4px;
+  font-size: 1.3rem;
+}
+
+.sidebar .muted {
+  color: #afb5a7;
+}
+
+.sidebar nav {
+  margin-top: 16px;
+  display: grid;
+  gap: 8px;
+}
+
+.nav-link {
+  color: #dfe3d8;
+  text-decoration: none;
+  padding: 10px 12px;
+  border-radius: 10px;
+  transition: background-color 120ms ease;
+}
+
+.nav-link:hover {
+  background: #262823;
+}
+
+.nav-link-active {
+  background: #0a8f6a;
+  color: white;
+}
+
+.main-content {
+  padding: 20px;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 12px 14px;
+  background: var(--bg-accent);
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.role-badge {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.view-panel {
+  margin-top: 16px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 18px;
+  min-height: calc(100vh - 124px);
+}
+
+.stats-grid {
+  margin-top: 14px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.stat-card {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 14px;
+  background: white;
+}
+
+.stat-value {
+  margin: 8px 0 0;
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.quick-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+@media (max-width: 900px) {
+  .app-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    border-right: 0;
+    border-bottom: 1px solid #2d2c28;
+  }
+
+  .topbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .topbar-right {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .stats-grid,
+  .split-inputs {
+    grid-template-columns: 1fr;
+  }
+
+  .quick-actions {
+    flex-direction: column;
+  }
+}
