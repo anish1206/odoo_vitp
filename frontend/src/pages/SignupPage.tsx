@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 import { useAuth } from "../context/AuthContext";
 
@@ -28,6 +29,31 @@ export const SignupPage = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const getApiErrorMessage = (unknownError: unknown): string => {
+    if (!axios.isAxiosError(unknownError)) {
+      return "Signup failed. Check details and try again.";
+    }
+
+    const detail = unknownError.response?.data?.detail;
+    if (typeof detail === "string" && detail.trim()) {
+      return detail;
+    }
+
+    if (Array.isArray(detail) && detail.length > 0) {
+      const firstDetail = detail[0];
+      if (
+        firstDetail &&
+        typeof firstDetail === "object" &&
+        "msg" in firstDetail &&
+        typeof firstDetail.msg === "string"
+      ) {
+        return firstDetail.msg;
+      }
+    }
+
+    return "Signup failed. Check details and try again.";
+  };
 
   const selectedCountry = useMemo(
     () => COUNTRIES.find((country) => country.code === countryCode),
@@ -62,17 +88,22 @@ export const SignupPage = () => {
 
     setIsSubmitting(true);
     try {
+      const normalizedCompanyName = companyName.trim();
+      const normalizedFirstName = firstName.trim();
+      const normalizedLastName = lastName.trim();
+      const normalizedEmail = email.trim().toLowerCase();
+
       await signup({
-        company_name: companyName,
+        company_name: normalizedCompanyName,
         country_code: countryCode,
-        admin_first_name: firstName,
-        admin_last_name: lastName,
-        email,
+        admin_first_name: normalizedFirstName,
+        admin_last_name: normalizedLastName,
+        email: normalizedEmail,
         password,
       });
       navigate("/", { replace: true });
-    } catch {
-      setError("Signup failed. Check details and try again.");
+    } catch (unknownError) {
+      setError(getApiErrorMessage(unknownError));
     } finally {
       setIsSubmitting(false);
     }

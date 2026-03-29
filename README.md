@@ -36,3 +36,17 @@ Test layout:
 
 - `test/unit` for unit tests (business logic and helpers).
 - `test/api` for API tests (FastAPI endpoints with TestClient).
+
+## Migrations (Phase 2)
+
+Run migrations from the `backend` directory:
+
+```
+alembic upgrade head
+```
+
+Create a new migration revision:
+
+```
+alembic revision -m "your migration message"
+```

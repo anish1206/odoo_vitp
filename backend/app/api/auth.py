@@ -3,6 +3,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.core.country_currency import get_base_currency
+from app.core.default_data import DEFAULT_EXPENSE_CATEGORIES
 from app.core.security import (
     create_access_token,
     create_refresh_token,
@@ -11,7 +12,7 @@ from app.core.security import (
     decode_token,
 )
 from app.db.session import get_db
-from app.models import Company, User, UserRole
+from app.models import Company, ExpenseCategory, User, UserRole
 from app.schemas.auth import (
     AccessTokenResponse,
     AuthResponse,
@@ -74,6 +75,16 @@ def signup(payload: SignupRequest, db: Session = Depends(get_db)):
     )
     db.add(company)
     db.flush()
+
+    for category in DEFAULT_EXPENSE_CATEGORIES:
+        db.add(
+            ExpenseCategory(
+                company_id=company.id,
+                name=category["name"],
+                code=category["code"],
+                description=category["description"],
+            )
+        )
 
     admin_user = User(
         company_id=company.id,

@@ -21,3 +21,9 @@ class Company(Base):
     )
 
     users = relationship("User", back_populates="company")
+    departments = relationship("Department", back_populates="company")
+    categories = relationship("ExpenseCategory", back_populates="company")
+    claims = relationship("ExpenseClaim", back_populates="company")
+    receipts = relationship("ReceiptFile", back_populates="company")
+    approval_rules = relationship("ApprovalRule", back_populates="company")
+    audit_logs = relationship("AuditLog", back_populates="company")

@@ -1,5 +1,8 @@
 from uuid import uuid4
 
+from app.db.session import SessionLocal
+from app.models import ExpenseCategory
+
 
 def _signup_payload() -> dict[str, str]:
     unique = uuid4().hex[:8]
@@ -55,6 +58,20 @@ def test_signup_login_refresh_and_me_flow(client):
     )
     assert refresh_response.status_code == 200
     assert "access_token" in refresh_response.json()
+
+
+def test_signup_seeds_default_categories(client):
+    signup_payload = _signup_payload()
+
+    signup_response = client.post("/auth/signup", json=signup_payload)
+    assert signup_response.status_code == 201
+    company_id = signup_response.json()["company"]["id"]
+
+    with SessionLocal() as db:
+        categories = db.query(ExpenseCategory).filter(ExpenseCategory.company_id == company_id).all()
+
+    names = {category.name for category in categories}
+    assert {"Travel", "Food", "Accommodation", "Office", "Misc"}.issubset(names)
 
 
 def test_signup_duplicate_email_returns_400(client):

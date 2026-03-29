@@ -24,6 +24,7 @@ class User(Base):
     role: Mapped[UserRole] = mapped_column(SqlEnum(UserRole), default=UserRole.EMPLOYEE)
     is_approver: Mapped[bool] = mapped_column(Boolean, default=False)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
+    department_id: Mapped[int | None] = mapped_column(ForeignKey("departments.id"), nullable=True)
     manager_id: Mapped[int | None] = mapped_column(ForeignKey("users.id"), nullable=True)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), nullable=False
@@ -33,3 +34,12 @@ class User(Base):
     )
 
     company = relationship("Company", back_populates="users")
+    department = relationship("Department", back_populates="users")
+    manager = relationship("User", remote_side=[id], back_populates="reports")
+    reports = relationship("User", back_populates="manager")
+
+    employee_claims = relationship("ExpenseClaim", foreign_keys="ExpenseClaim.employee_id")
+    uploaded_receipts = relationship("ReceiptFile", back_populates="employee")
+    assigned_approval_tasks = relationship("ApprovalTask", foreign_keys="ApprovalTask.approver_id")
+    approval_actions = relationship("ApprovalActionLog", foreign_keys="ApprovalActionLog.actor_id")
+    audit_logs = relationship("AuditLog", back_populates="user")

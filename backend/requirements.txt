@@ -6,5 +6,6 @@ python-jose[cryptography]
 bcrypt
 email-validator
 psycopg[binary]
+alembic
 pytest
 httpx
