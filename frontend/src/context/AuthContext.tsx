@@ -140,7 +140,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
 
     if (user.role === "ADMIN") {
-      return "/admin/settings";
+      return "/admin/claims";
     }
 
     return "/employee/dashboard";

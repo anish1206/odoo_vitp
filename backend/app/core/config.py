@@ -11,6 +11,9 @@ class Settings(BaseSettings):
     refresh_token_expire_minutes: int = 60 * 24 * 7
     cors_origins: str = "http://localhost:5173"
     uploads_dir: str = "./uploads"
+    currency_provider: str = "live-with-fallback"
+    currency_api_url: str = "https://api.exchangerate.host/latest"
+    currency_timeout_seconds: float = 6.0
     gemini_api_key: str | None = None
     gemini_model: str = "gemini-2.0-flash"
     gemini_ocr_timeout_seconds: float = 20.0

@@ -205,3 +205,145 @@ def test_non_approver_cannot_access_approval_inbox(client):
     inbox_response = client.get("/approvals/tasks", headers=employee_headers)
     assert inbox_response.status_code == 403
     assert inbox_response.json()["detail"] == "Approver access required"
+
+
+def test_fallback_routing_uses_multi_level_manager_chain(client):
+    unique = uuid4().hex[:8]
+    signup_response = client.post("/auth/signup", json=_signup_payload())
+    assert signup_response.status_code == 201
+
+    company_id = signup_response.json()["company"]["id"]
+
+    with SessionLocal() as db:
+        senior_manager = User(
+            company_id=company_id,
+            email=f"senior.manager.{unique}@example.com",
+            hashed_password=get_password_hash("TestPass123!"),
+            first_name="Senior",
+            last_name="Manager",
+            role=UserRole.EMPLOYEE,
+            is_approver=True,
+            is_active=True,
+        )
+        db.add(senior_manager)
+        db.flush()
+
+        line_manager = User(
+            company_id=company_id,
+            email=f"line.manager.{unique}@example.com",
+            hashed_password=get_password_hash("TestPass123!"),
+            first_name="Line",
+            last_name="Manager",
+            role=UserRole.EMPLOYEE,
+            is_approver=True,
+            is_active=True,
+            manager_id=senior_manager.id,
+        )
+        db.add(line_manager)
+        db.flush()
+
+        employee = User(
+            company_id=company_id,
+            email=f"chain.employee.{unique}@example.com",
+            hashed_password=get_password_hash("TestPass123!"),
+            first_name="Chain",
+            last_name="Employee",
+            role=UserRole.EMPLOYEE,
+            is_approver=False,
+            is_active=True,
+            manager_id=line_manager.id,
+        )
+        db.add(employee)
+        db.commit()
+
+    employee_headers = _auth_headers_for_login(client, f"chain.employee.{unique}@example.com", "TestPass123!")
+    line_manager_headers = _auth_headers_for_login(client, f"line.manager.{unique}@example.com", "TestPass123!")
+    senior_manager_headers = _auth_headers_for_login(client, f"senior.manager.{unique}@example.com", "TestPass123!")
+
+    category_id = client.get("/claims/categories", headers=employee_headers).json()[0]["id"]
+    claim_id = client.post(
+        "/claims",
+        headers=employee_headers,
+        json={
+            "title": "Client lunch",
+            "description": "Escalation chain test",
+            "category_id": category_id,
+            "original_currency": "INR",
+            "original_amount": 2200,
+            "expense_date": "2026-03-29",
+        },
+    ).json()["id"]
+
+    submit_response = client.post(f"/claims/{claim_id}/submit", headers=employee_headers)
+    assert submit_response.status_code == 200
+
+    first_level_tasks = client.get("/approvals/tasks", headers=line_manager_headers).json()["tasks"]
+    second_level_tasks = client.get("/approvals/tasks", headers=senior_manager_headers).json()["tasks"]
+
+    assert len(first_level_tasks) == 1
+    assert len(second_level_tasks) == 0
+
+    first_task_id = first_level_tasks[0]["task_id"]
+    approve_response = client.post(
+        f"/approvals/tasks/{first_task_id}/approve",
+        headers=line_manager_headers,
+        json={"comment": "Forwarding to next manager"},
+    )
+    assert approve_response.status_code == 200
+
+    second_level_tasks = client.get("/approvals/tasks", headers=senior_manager_headers).json()["tasks"]
+    assert len(second_level_tasks) == 1
+
+
+def test_approval_detail_contains_receipt_context(client):
+    unique = uuid4().hex[:8]
+    signup_response = client.post("/auth/signup", json=_signup_payload())
+    assert signup_response.status_code == 201
+
+    company_id = signup_response.json()["company"]["id"]
+    _create_employee_and_manager(company_id=company_id, unique=unique)
+
+    employee_headers = _auth_headers_for_login(client, f"employee.{unique}@example.com", "TestPass123!")
+    manager_headers = _auth_headers_for_login(client, f"manager.{unique}@example.com", "TestPass123!")
+
+    category_id = client.get("/claims/categories", headers=employee_headers).json()[0]["id"]
+
+    receipt_upload = client.post(
+        "/receipts",
+        headers=employee_headers,
+        files={
+            "file": (
+                "meal_receipt.txt",
+                b"Merchant: Team Cafe\nAmount: INR 1450.00\nDate: 2026-03-29\n",
+                "text/plain",
+            )
+        },
+    )
+    assert receipt_upload.status_code == 201
+    receipt_file_id = receipt_upload.json()["receipt_file_id"]
+
+    claim_id = client.post(
+        "/claims",
+        headers=employee_headers,
+        json={
+            "title": "Team dinner",
+            "description": "Receipt context test",
+            "category_id": category_id,
+            "receipt_file_id": receipt_file_id,
+            "original_currency": "INR",
+            "original_amount": 1450,
+            "expense_date": "2026-03-29",
+        },
+    ).json()["id"]
+
+    submit_response = client.post(f"/claims/{claim_id}/submit", headers=employee_headers)
+    assert submit_response.status_code == 200
+
+    task_id = client.get("/approvals/tasks", headers=manager_headers).json()["tasks"][0]["task_id"]
+    detail_response = client.get(f"/approvals/tasks/{task_id}", headers=manager_headers)
+    assert detail_response.status_code == 200
+
+    detail_payload = detail_response.json()
+    assert detail_payload["receipt"]["receipt_id"] == receipt_file_id
+    assert detail_payload["ocr_extraction"] is not None
+    assert detail_payload["pending_approver_names"]

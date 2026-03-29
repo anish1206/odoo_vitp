@@ -13,6 +13,7 @@ import { AdminUsersPage } from "./pages/AdminUsersPage";
 import { AdminDepartmentsPage } from "./pages/AdminDepartmentsPage";
 import { AdminCategoriesPage } from "./pages/AdminCategoriesPage";
 import { AdminApprovalRulesPage } from "./pages/AdminApprovalRulesPage";
+import { AdminClaimsPage } from "./pages/AdminClaimsPage";
 import { PlaceholderPage } from "./pages/PlaceholderPage";
 import { SignupPage } from "./pages/SignupPage";
 
@@ -55,6 +56,7 @@ function App() {
               />
             }
           />
+          <Route path="/admin/claims" element={<AdminClaimsPage />} />
           <Route path="/admin/users" element={<AdminUsersPage />} />
           <Route path="/admin/departments" element={<AdminDepartmentsPage />} />
           <Route path="/admin/categories" element={<AdminCategoriesPage />} />

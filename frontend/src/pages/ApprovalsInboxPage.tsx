@@ -193,8 +193,53 @@ export const ApprovalsInboxPage = () => {
                 <p>
                   Amount: {taskDetail.original_currency} {taskDetail.original_amount.toFixed(2)}
                 </p>
+                {taskDetail.converted_amount !== null ? (
+                  <p>
+                    Converted: {taskDetail.base_currency} {taskDetail.converted_amount.toFixed(2)}
+                    {taskDetail.exchange_rate !== null ? (
+                      <span className="muted"> (rate {taskDetail.exchange_rate.toFixed(4)})</span>
+                    ) : null}
+                  </p>
+                ) : null}
                 <p>Expense date: {taskDetail.expense_date}</p>
+                {taskDetail.pending_approver_names.length > 0 ? (
+                  <p className="muted">Pending with: {taskDetail.pending_approver_names.join(", ")}</p>
+                ) : null}
                 {taskDetail.claim_description ? <p>{taskDetail.claim_description}</p> : null}
+
+                {taskDetail.receipt ? (
+                  <div className="context-card">
+                    <h4>Receipt</h4>
+                    <p>
+                      <strong>{taskDetail.receipt.original_filename}</strong>
+                    </p>
+                    <p className="muted">
+                      {taskDetail.receipt.file_mime_type} · {taskDetail.receipt.file_size_bytes} bytes · uploaded{" "}
+                      {new Date(taskDetail.receipt.uploaded_at).toLocaleString()}
+                    </p>
+                  </div>
+                ) : (
+                  <p className="muted">No receipt attached.</p>
+                )}
+
+                {taskDetail.ocr_extraction ? (
+                  <div className="context-card">
+                    <h4>OCR Extraction</h4>
+                    <p className="muted">
+                      Engine: {taskDetail.ocr_extraction.engine ?? "unknown"}
+                      {taskDetail.ocr_extraction.confidence !== null
+                        ? ` · confidence ${Math.round(taskDetail.ocr_extraction.confidence * 100)}%`
+                        : ""}
+                    </p>
+                    {taskDetail.ocr_extraction.parsed_fields ? (
+                      <pre className="ocr-pre">
+                        {JSON.stringify(taskDetail.ocr_extraction.parsed_fields, null, 2)}
+                      </pre>
+                    ) : (
+                      <p className="muted">No structured OCR fields available.</p>
+                    )}
+                  </div>
+                ) : null}
 
                 <label htmlFor="approvalComment">Comment (required for rejection)</label>
                 <textarea

@@ -26,6 +26,22 @@ export interface ApprovalActionLog {
   created_at: string;
 }
 
+export interface ApprovalReceiptContext {
+  receipt_id: number;
+  original_filename: string;
+  file_mime_type: string;
+  file_size_bytes: number;
+  uploaded_at: string;
+}
+
+export interface ApprovalOcrContext {
+  extraction_id: number;
+  engine: string | null;
+  confidence: number | null;
+  parsed_fields: Record<string, unknown> | null;
+  created_at: string;
+}
+
 export interface ApprovalTaskClaimDetail {
   task_id: number;
   claim_id: number;
@@ -36,8 +52,15 @@ export interface ApprovalTaskClaimDetail {
   expense_date: string;
   original_currency: string;
   original_amount: number;
+  base_currency: string;
+  converted_amount: number | null;
+  exchange_rate: number | null;
+  exchange_rate_provider: string | null;
   status: string;
   current_approval_step: number | null;
+  pending_approver_names: string[];
+  receipt: ApprovalReceiptContext | null;
+  ocr_extraction: ApprovalOcrContext | null;
   logs: ApprovalActionLog[];
 }
 

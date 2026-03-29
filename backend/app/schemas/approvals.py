@@ -1,4 +1,5 @@
 from datetime import date, datetime
+from typing import Any
 
 from pydantic import BaseModel, Field
 
@@ -25,6 +26,22 @@ class ApprovalActionLogOut(BaseModel):
     created_at: datetime
 
 
+class ApprovalReceiptContextOut(BaseModel):
+    receipt_id: int
+    original_filename: str
+    file_mime_type: str
+    file_size_bytes: int
+    uploaded_at: datetime
+
+
+class ApprovalOcrContextOut(BaseModel):
+    extraction_id: int
+    engine: str | None
+    confidence: float | None
+    parsed_fields: dict[str, Any] | None
+    created_at: datetime
+
+
 class ApprovalTaskClaimDetailOut(BaseModel):
     task_id: int
     claim_id: int
@@ -35,8 +52,15 @@ class ApprovalTaskClaimDetailOut(BaseModel):
     expense_date: date
     original_currency: str
     original_amount: float
+    base_currency: str
+    converted_amount: float | None
+    exchange_rate: float | None
+    exchange_rate_provider: str | None
     status: str
     current_approval_step: int | None
+    pending_approver_names: list[str] = Field(default_factory=list)
+    receipt: ApprovalReceiptContextOut | None = None
+    ocr_extraction: ApprovalOcrContextOut | None = None
     logs: list[ApprovalActionLogOut]
 
 

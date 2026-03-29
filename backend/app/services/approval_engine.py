@@ -47,11 +47,35 @@ def _rule_matches_claim(rule: ApprovalRule, claim: ExpenseClaim) -> bool:
     return True
 
 
-def _resolve_fallback_approver(db: Session, claim: ExpenseClaim) -> User | None:
-    if claim.employee.manager_id is not None:
-        manager = db.get(User, claim.employee.manager_id)
-        if manager is not None and manager.is_active:
-            return manager
+def _get_manager_chain(db: Session, claim: ExpenseClaim) -> list[User]:
+    chain: list[User] = []
+    seen_ids: set[int] = set()
+    manager_id = claim.employee.manager_id
+
+    while manager_id is not None:
+        if manager_id in seen_ids:
+            break
+
+        seen_ids.add(manager_id)
+        manager = db.get(User, manager_id)
+        if manager is None:
+            break
+
+        if manager.company_id != claim.company_id:
+            break
+
+        if manager.is_active:
+            chain.append(manager)
+
+        manager_id = manager.manager_id
+
+    return chain
+
+
+def _resolve_fallback_approvers(db: Session, claim: ExpenseClaim) -> list[User]:
+    manager_chain = _get_manager_chain(db, claim)
+    if manager_chain:
+        return manager_chain
 
     company_approvers = db.scalars(
         select(User)
@@ -65,14 +89,14 @@ def _resolve_fallback_approver(db: Session, claim: ExpenseClaim) -> User | None:
 
     for candidate in company_approvers:
         if candidate.is_approver or candidate.role == UserRole.ADMIN:
-            return candidate
+            return [candidate]
 
     if claim.employee.is_active and (
         claim.employee.is_approver or claim.employee.role == UserRole.ADMIN
     ):
-        return claim.employee
+        return [claim.employee]
 
-    return None
+    return []
 
 
 def _resolve_step_approver_id(
@@ -81,6 +105,7 @@ def _resolve_step_approver_id(
     step_approver_user_id: int | None,
     step_approver_department_id: int | None,
     claim: ExpenseClaim,
+    manager_level: int = 1,
 ) -> int | None:
     if step_approver_user_id is not None:
         approver = db.get(User, step_approver_user_id)
@@ -89,13 +114,12 @@ def _resolve_step_approver_id(
         return approver.id
 
     if step_approver_role == ApproverRole.MANAGER:
-        if claim.employee.manager_id is None:
+        manager_chain = _get_manager_chain(db, claim)
+        manager_index = manager_level - 1
+        if manager_index < 0 or manager_index >= len(manager_chain):
             return None
 
-        manager = db.get(User, claim.employee.manager_id)
-        if manager is None or not manager.is_active or manager.company_id != claim.company_id:
-            return None
-        return manager.id
+        return manager_chain[manager_index].id
 
     if step_approver_role == ApproverRole.DEPARTMENT_HEAD:
         if step_approver_department_id is None:
@@ -141,13 +165,20 @@ def generate_tasks_for_submitted_claim(
     used_fallback = False
 
     if matched_rule is not None:
+        manager_step_count = 0
         for step in sorted(matched_rule.steps, key=lambda current_step: current_step.step_order):
+            manager_level = 1
+            if step.approver_role == ApproverRole.MANAGER:
+                manager_step_count += 1
+                manager_level = manager_step_count
+
             approver_id = _resolve_step_approver_id(
                 db=db,
                 step_approver_role=step.approver_role,
                 step_approver_user_id=step.approver_user_id,
                 step_approver_department_id=step.approver_department_id,
                 claim=claim,
+                manager_level=manager_level,
             )
             if approver_id is None:
                 continue
@@ -164,20 +195,21 @@ def generate_tasks_for_submitted_claim(
             )
 
     if not created_tasks:
-        fallback_approver = _resolve_fallback_approver(db, claim)
-        if fallback_approver is None:
+        fallback_approvers = _resolve_fallback_approvers(db, claim)
+        if not fallback_approvers:
             raise ValueError("No approver available. Assign a manager or approver user first.")
 
-        created_tasks.append(
-            ApprovalTask(
-                claim_id=claim.id,
-                rule_id=None,
-                rule_step_id=None,
-                approver_id=fallback_approver.id,
-                sequence_order=1,
-                status=ApprovalTaskStatus.PENDING,
+        for index, fallback_approver in enumerate(fallback_approvers, start=1):
+            created_tasks.append(
+                ApprovalTask(
+                    claim_id=claim.id,
+                    rule_id=None,
+                    rule_step_id=None,
+                    approver_id=fallback_approver.id,
+                    sequence_order=index,
+                    status=ApprovalTaskStatus.PENDING,
+                )
             )
-        )
         used_fallback = True
 
     for task in created_tasks:

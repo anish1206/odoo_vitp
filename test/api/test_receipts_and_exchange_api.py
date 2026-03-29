@@ -65,7 +65,11 @@ def test_exchange_preview_and_submit_claim_with_snapshot(client):
     assert preview_response.status_code == 200
     preview_payload = preview_response.json()
     assert preview_payload["converted_amount"] > 100
-    assert preview_payload["provider"] == "static-demo-rates"
+    assert preview_payload["provider"] in {
+        "static-demo-rates",
+        "static-demo-rates-fallback",
+        "live-exchangerate-host",
+    }
 
     categories_response = client.get("/claims/categories", headers=headers)
     assert categories_response.status_code == 200

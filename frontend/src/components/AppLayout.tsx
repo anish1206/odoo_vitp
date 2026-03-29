@@ -23,6 +23,7 @@ export const AppLayout = () => {
   if (user?.role === "ADMIN") {
     navItems.push(
       { to: "/admin/settings", label: "Company Settings" },
+      { to: "/admin/claims", label: "All Claims" },
       { to: "/admin/users", label: "Users" },
       { to: "/admin/departments", label: "Departments" },
       { to: "/admin/categories", label: "Categories" },

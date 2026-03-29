@@ -2,6 +2,7 @@ import { http } from "./http";
 import type {
   Claim,
   ClaimCreateRequest,
+  ClaimDetail,
   ClaimListResponse,
   ClaimStatus,
   ClaimUpdateRequest,
@@ -12,6 +13,8 @@ export interface ClaimListFilters {
   status?: ClaimStatus;
   date_from?: string;
   date_to?: string;
+  employee_id?: number;
+  department_id?: number;
 }
 
 export const listClaimCategories = async (): Promise<ExpenseCategory[]> => {
@@ -37,8 +40,8 @@ export const submitClaim = async (claimId: number): Promise<Claim> => {
   return response.data;
 };
 
-export const getClaimDetail = async (claimId: number): Promise<Claim> => {
-  const response = await http.get<Claim>(`/claims/${claimId}`);
+export const getClaimDetail = async (claimId: number): Promise<ClaimDetail> => {
+  const response = await http.get<ClaimDetail>(`/claims/${claimId}`);
   return response.data;
 };
 
@@ -48,5 +51,19 @@ export const listMyClaims = async (
   const response = await http.get<ClaimListResponse>("/claims/my", {
     params: filters,
   });
+  return response.data;
+};
+
+export const listCompanyClaims = async (
+  filters: ClaimListFilters = {},
+): Promise<ClaimListResponse> => {
+  const response = await http.get<ClaimListResponse>("/claims/company", {
+    params: filters,
+  });
+  return response.data;
+};
+
+export const getCompanyClaimDetail = async (claimId: number): Promise<ClaimDetail> => {
+  const response = await http.get<ClaimDetail>(`/claims/company/${claimId}`);
   return response.data;
 };
