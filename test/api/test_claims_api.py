@@ -59,7 +59,7 @@ def test_claim_draft_update_submit_and_filter_flow(client):
 
     submit_response = client.post(f"/claims/{claim_id}/submit", headers=headers)
     assert submit_response.status_code == 200
-    assert submit_response.json()["status"] == "SUBMITTED"
+    assert submit_response.json()["status"] == "IN_REVIEW"
 
     invalid_update_response = client.patch(
         f"/claims/{claim_id}",
@@ -69,11 +69,11 @@ def test_claim_draft_update_submit_and_filter_flow(client):
     assert invalid_update_response.status_code == 400
     assert invalid_update_response.json()["detail"] == "Only draft claims can be edited"
 
-    submitted_filter_response = client.get("/claims/my?status=SUBMITTED", headers=headers)
-    assert submitted_filter_response.status_code == 200
-    submitted_claims = submitted_filter_response.json()["claims"]
-    assert len(submitted_claims) == 1
-    assert submitted_claims[0]["id"] == claim_id
+    review_filter_response = client.get("/claims/my?status=IN_REVIEW", headers=headers)
+    assert review_filter_response.status_code == 200
+    review_claims = review_filter_response.json()["claims"]
+    assert len(review_claims) == 1
+    assert review_claims[0]["id"] == claim_id
 
 
 def test_claims_require_auth(client):

@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import inspect, text
 
 import app.models  # noqa: F401
+from app.api.approvals import router as approvals_router
 from app.api.auth import router as auth_router
 from app.api.claims import router as claims_router
 from app.api.users import router as users_router
@@ -55,3 +56,4 @@ def health_check() -> dict[str, str]:
 app.include_router(auth_router)
 app.include_router(users_router)
 app.include_router(claims_router)
+app.include_router(approvals_router)

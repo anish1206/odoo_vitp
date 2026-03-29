@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session, selectinload
 from app.api.deps import get_current_user
 from app.db.session import get_db
 from app.models import ExpenseCategory, ExpenseClaim, ExpenseClaimStatus, User
+from app.services.approval_engine import generate_tasks_for_submitted_claim
 from app.schemas.expense_claim import (
     ClaimCreateRequest,
     ClaimListResponse,
@@ -60,7 +61,7 @@ def _get_active_category_or_400(db: Session, company_id: int, category_id: int) 
 def _get_claim_for_user_or_404(db: Session, current_user: User, claim_id: int) -> ExpenseClaim:
     claim = db.scalar(
         select(ExpenseClaim)
-        .options(selectinload(ExpenseClaim.category))
+        .options(selectinload(ExpenseClaim.category), selectinload(ExpenseClaim.employee))
         .where(
             ExpenseClaim.id == claim_id,
             ExpenseClaim.company_id == current_user.company_id,
@@ -236,6 +237,15 @@ def submit_claim(
 
     claim.status = ExpenseClaimStatus.SUBMITTED
     claim.submitted_at = datetime.now(timezone.utc)
+
+    try:
+        generate_tasks_for_submitted_claim(
+            db=db,
+            claim=claim,
+            actor_id=current_user.id,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
 
     db.commit()
     db.refresh(claim)

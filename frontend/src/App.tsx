@@ -8,6 +8,7 @@ import { DashboardPage } from "./pages/DashboardPage";
 import { EmployeeClaimsPage } from "./pages/EmployeeClaimsPage";
 import { EmployeeSubmitClaimPage } from "./pages/EmployeeSubmitClaimPage";
 import { LoginPage } from "./pages/LoginPage";
+import { ApprovalsInboxPage } from "./pages/ApprovalsInboxPage";
 import { PlaceholderPage } from "./pages/PlaceholderPage";
 import { SignupPage } from "./pages/SignupPage";
 
@@ -40,15 +41,7 @@ function App() {
           <Route path="/employee/dashboard" element={<DashboardPage />} />
           <Route path="/employee/claims" element={<EmployeeClaimsPage />} />
           <Route path="/employee/submit" element={<EmployeeSubmitClaimPage />} />
-          <Route
-            path="/approvals/inbox"
-            element={
-              <PlaceholderPage
-                title="Approvals Inbox"
-                description="Phase 4 will add pending approvals queue and approve/reject actions."
-              />
-            }
-          />
+          <Route path="/approvals/inbox" element={<ApprovalsInboxPage />} />
           <Route
             path="/admin/settings"
             element={
