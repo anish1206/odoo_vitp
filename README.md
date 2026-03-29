@@ -16,6 +16,9 @@ All major PRD goals are implemented in the current codebase.
 - Live exchange-rate conversion with fallback behavior for resilience.
 - Claim and approval audit timeline/log visibility in UI detail panels.
 
+Video - https://drive.google.com/file/d/1pLDoBG_esv9GLs8hoP-gGo40ut7qzMag/view?usp=sharing
+
+------
 ## Tech Stack
 
 - Backend: FastAPI, SQLAlchemy, Alembic, SQLite/PostgreSQL-compatible modeling
