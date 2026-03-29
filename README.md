@@ -114,28 +114,15 @@ Notes:
 - Backend test suite available from repository root: pytest
 
 ## Screenshots
+<img width="790" height="855" alt="Screenshot 2026-03-29 165208" src="https://github.com/user-attachments/assets/60eeb6ed-345c-4bb4-8c41-e5904b3a3c24" />
+<img width="1004" height="678" alt="Screenshot 2026-03-29 165148" src="https://github.com/user-attachments/assets/3a7ae367-d158-4e11-91fe-b9911383a3cf" />
+<img width="1868" height="720" alt="Screenshot 2026-03-29 174519" src="https://github.com/user-attachments/assets/957f77dd-2600-497d-99b1-c36176b1abdb" />
+<img width="1884" height="725" alt="Screenshot 2026-03-29 174541" src="https://github.com/user-attachments/assets/32218341-459d-40d6-b8eb-ac81a882dfbd" />
+<img width="1536" height="720" alt="Screenshot 2026-03-29 174609" src="https://github.com/user-attachments/assets/4d57c3e8-43da-451b-88f2-e8702b9bb9ea" />
+<img width="1866" height="852" alt="Screenshot 2026-03-29 174802" src="https://github.com/user-attachments/assets/8c8da8fc-643a-40f0-876f-5839aa0d3ced" />
+<img width="1849" height="781" alt="Screenshot 2026-03-29 174852" src="https://github.com/user-attachments/assets/2e0449ef-3b22-4f95-a457-6d8004c33a56" />
+<img width="1535" height="662" alt="Screenshot 2026-03-29 175016" src="https://github.com/user-attachments/assets/a83ccab7-5afa-44e0-a78c-0a140f9992a0" />
 
-Add your demo screenshots in this section before final submission.
-
-### Authentication
-
-![alt text](<Screenshot 2026-03-29 165148.png>)
-![alt text](<Screenshot 2026-03-29 165208.png>)
-
-### Employee Flow
-
-![alt text](image.png)
-![alt text](image-1.png)
-![alt text](image-2.png)
-
-### Approver Flow
-
-![alt text](image-3.png)
-
-### Admin Flow
-
-![alt text](image-4.png)
-![alt text](image-5.png)
 
 ## Repository Structure
 
