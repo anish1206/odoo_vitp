@@ -14,7 +14,7 @@ import { AdminDepartmentsPage } from "./pages/AdminDepartmentsPage";
 import { AdminCategoriesPage } from "./pages/AdminCategoriesPage";
 import { AdminApprovalRulesPage } from "./pages/AdminApprovalRulesPage";
 import { AdminClaimsPage } from "./pages/AdminClaimsPage";
-import { PlaceholderPage } from "./pages/PlaceholderPage";
+import { AdminSettingsPage } from "./pages/AdminSettingsPage";
 import { SignupPage } from "./pages/SignupPage";
 
 const RootRedirect = () => {
@@ -47,15 +47,7 @@ function App() {
           <Route path="/employee/claims" element={<EmployeeClaimsPage />} />
           <Route path="/employee/submit" element={<EmployeeSubmitClaimPage />} />
           <Route path="/approvals/inbox" element={<ApprovalsInboxPage />} />
-          <Route
-            path="/admin/settings"
-            element={
-              <PlaceholderPage
-                title="Company Settings"
-                description="Phase 5 adds admin management screens and controls."
-              />
-            }
-          />
+          <Route path="/admin/settings" element={<AdminSettingsPage />} />
           <Route path="/admin/claims" element={<AdminClaimsPage />} />
           <Route path="/admin/users" element={<AdminUsersPage />} />
           <Route path="/admin/departments" element={<AdminDepartmentsPage />} />
