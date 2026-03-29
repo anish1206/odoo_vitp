@@ -5,8 +5,8 @@ export const DashboardPage = () => {
     <div>
       <h2>Employee Dashboard</h2>
       <p className="muted">
-        Phase 1 includes auth, company bootstrap, and role-aware navigation. Claim
-        flows are planned for Phase 3.
+        Phase 3 now supports creating claim drafts, editing drafts, submitting claims,
+        and filtering your claim history.
       </p>
 
       <div className="stats-grid">

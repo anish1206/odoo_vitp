@@ -12,7 +12,7 @@ This PRD is written for a coding assistant (and developers) who will implement a
 - Allow companies to define approval flows based on **amount thresholds** and **other rules**, while also leveraging the **reporting manager** hierarchy as a fallback.[page:1]
 - Support **multi-level approvals** and **minimum-approval percentage** logic per rule where applicable.[file:2]
 - Automatically **create a Company and Admin user** on first signup and set the company’s base currency from the environment/country selection.[page:1]
-- Extract key fields from receipt images using OCR and pre-fill expense details, allowing users to review and correct before submitting.[page:1]
+- Extract key fields from receipt images using OCR and pre-fill expense details, allowing users to review and correct before submitting.
 - Provide simple, responsive UIs for employees, approvers, and admins that match the hackathon mockups.[file:2]
 
 ### 1.2 Non-Goals (V1)
@@ -964,4 +964,4 @@ Suggested order for a time-bound hackathon:
    - Final approval; status moves to APPROVED.
 7. Optional: show rejected + resubmission flow and simple admin audit log.
 
-This scenario directly demonstrates that the system satisfies the hackathon problem statement: threshold-based approvals, multi-level routing, flexible rules, auto company currency, OCR, and clear status tracking.[page:1][file:2]
+This scenario directly demonstrates that the system satisfies the hackathon problem statement: threshold-based approvals, multi-level routing, flexible rules, auto company currency, OCR, and clear status tracking.

@@ -5,6 +5,8 @@ import { ProtectedRoute } from "./components/ProtectedRoute";
 import { PublicOnlyRoute } from "./components/PublicOnlyRoute";
 import { useAuth } from "./context/AuthContext";
 import { DashboardPage } from "./pages/DashboardPage";
+import { EmployeeClaimsPage } from "./pages/EmployeeClaimsPage";
+import { EmployeeSubmitClaimPage } from "./pages/EmployeeSubmitClaimPage";
 import { LoginPage } from "./pages/LoginPage";
 import { PlaceholderPage } from "./pages/PlaceholderPage";
 import { SignupPage } from "./pages/SignupPage";
@@ -36,24 +38,8 @@ function App() {
       <Route element={<ProtectedRoute />}>
         <Route element={<AppLayout />}>
           <Route path="/employee/dashboard" element={<DashboardPage />} />
-          <Route
-            path="/employee/claims"
-            element={
-              <PlaceholderPage
-                title="My Claims"
-                description="Phase 3 will deliver claim list, status filters, and detail views."
-              />
-            }
-          />
-          <Route
-            path="/employee/submit"
-            element={
-              <PlaceholderPage
-                title="Submit Expense"
-                description="Phase 3 will add draft and submit claim workflows."
-              />
-            }
-          />
+          <Route path="/employee/claims" element={<EmployeeClaimsPage />} />
+          <Route path="/employee/submit" element={<EmployeeSubmitClaimPage />} />
           <Route
             path="/approvals/inbox"
             element={
